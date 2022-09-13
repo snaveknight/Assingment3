@@ -357,7 +357,7 @@ public class Book {
 		String line = "";
 		while(sc.hasNext()){	
 			Book book = new Book();	
-			String[] split = sc.nextLine().split(",");
+			String[] split = sc.nextLine().split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)", -1);
 			line = split[0];
 				book.setBook_id(split[0]);
 				book.setGoodreads_book_id(split[1]);
