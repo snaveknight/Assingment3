@@ -4,6 +4,8 @@ import java.io.File;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
@@ -351,14 +353,48 @@ public class Book {
 
 
 
+//	public static List<Book> bookList() throws FileNotFoundException {
+//		ArrayList<Book> BookList = new ArrayList<>();
+//		Scanner sc = new Scanner(new File("src/library/books.csv"));
+//		while(sc.hasNext()){	
+//			Book book = new Book();	
+//			String[] split = sc.nextLine().split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
+//				book.setBook_id(split[0]);
+//				book.setGoodreads_book_id(split[1]);
+//				book.setBest_book_id(split[2]);
+//				book.setWork_id(split[3]);
+//				book.setBooks_count(split[4]);
+//				book.setIsbn(split[5]);
+//				book.setIsbn13(split[6]);
+//				book.setAuthors(split[7]);
+//				book.setOriginal_publication_year(split[8]);
+//				book.setOriginal_title(split[9]);
+//				book.setTitle(split[10]);
+//				book.setLanguage_code(split[11]);
+//				book.setAverage_rating(split[12]);
+//				book.setRatings_count(split[13]);
+//				book.setWork_ratings_count(split[14]);
+//				book.setWork_text_reviews_count(split[15]);
+//				book.setRatings_1(split[16]);
+//				book.setRatings_2(split[17]);
+//				book.setRatings_3(split[18]);
+//				book.setRatings_4(split[19]);
+//				book.setRatings_5(split[20]);
+//				book.setImage_url(split[21]);
+//				book.setSmall_image_url(split[22]);
+//			BookList.add(book);
+//		}
+//		sc.close();
+//
+//		return BookList;
+//	}
+	
 	public static List<Book> bookList() throws FileNotFoundException {
-		ArrayList<Book> BookList = new ArrayList<>();
+		LinkedList<Book> BookList = new LinkedList<>();
 		Scanner sc = new Scanner(new File("src/library/books.csv"));
-		String line = "";
 		while(sc.hasNext()){	
 			Book book = new Book();	
-			String[] split = sc.nextLine().split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)", -1);
-			line = split[0];
+			String[] split = sc.nextLine().split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
 				book.setBook_id(split[0]);
 				book.setGoodreads_book_id(split[1]);
 				book.setBest_book_id(split[2]);
@@ -382,25 +418,12 @@ public class Book {
 				book.setRatings_5(split[20]);
 				book.setImage_url(split[21]);
 				book.setSmall_image_url(split[22]);
-				System.out.println("line " + line);
 			BookList.add(book);
 		}
 		sc.close();
 
 		return BookList;
 	}
-	
-//	public static List<Book> bookList() throws FileNotFoundException {
-//		LinkedList<Book> BookList = new LinkedList();
-//		Scanner sc = new Scanner(new File("src/library/books.csv"));
-//		sc.useDelimiter(",");
-//		while(sc.hasNext()){
-//			Book book = new Book(sc.next());
-//			BookList.add(book);
-//		}
-//		sc.close();
-//		return BookList;
-//	}
 	
 
 	public static ArrayList<Book> showTopTen() throws FileNotFoundException {
@@ -411,7 +434,8 @@ public class Book {
 		}
 		return topTenList;
 	}
-	public static Book singleSearch(String book_id, String isbn) throws FileNotFoundException {
+	
+	public static Book bookSearch(String book_id, String isbn) throws FileNotFoundException {
 		Book book = new Book();
 		List<Book> tempList = bookList();
 		for(Book books: tempList) {
@@ -425,12 +449,52 @@ public class Book {
 		return book;	
 	}
 	
+	public static Comparator<Book> AuthorComparatorAsc = new Comparator<Book>() {
+		
+		public int compare(Book b1, Book b2) {
+			String BookAuthorOne = b1.getAuthors().toUpperCase();
+			String BookAuthorTwo = b2.getAuthors().toUpperCase();
+			return BookAuthorOne.compareTo(BookAuthorTwo);
+		}
+		
+	};
+	
+	public static Comparator<Book> AuthorComparatorDesc = new Comparator<Book>() {
+		
+		public int compare(Book b1, Book b2) {
+			String BookAuthorOne = b1.getAuthors().toUpperCase();
+			String BookAuthorTwo = b2.getAuthors().toUpperCase();
+			return BookAuthorTwo.compareTo(BookAuthorOne);
+		}
+		
+	};
+	
+	public static ArrayList<Book> authorDescending() throws FileNotFoundException{
+		ArrayList<Book> descendingList = new ArrayList<Book>();
+		ArrayList<Book> tempList = showTopTen();
+			//Collections.sort();
+			 Collections.sort(tempList, Book.AuthorComparatorDesc);
+			 descendingList = tempList;
+		return descendingList;
+	}
+	
+	public static ArrayList<Book> authorAscending() throws FileNotFoundException{
+		ArrayList<Book> ascendingList = new ArrayList<Book>();
+		ArrayList<Book> tempList = showTopTen();
+			//Collections.sort();
+			 Collections.sort(tempList, Book.AuthorComparatorAsc);
+			 ascendingList = tempList;
+
+		return ascendingList;
+	}
+	
 	public static void main(String[] args) throws FileNotFoundException {
 		// TODO Auto-generated method stub
-		showTopTen();
-		bookList();
-		singleSearch("cat", "hat");
+		//showTopTen();
+		authorDescending();
 	}
+
+
 
 	
 	
