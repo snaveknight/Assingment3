@@ -10,7 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
 
-public class Book {
+public class Book{
 	String book_id;
 	String goodreads_book_id;
 	String best_book_id;
@@ -353,44 +353,8 @@ public class Book {
 
 
 
-//	public static List<Book> bookList() throws FileNotFoundException {
-//		ArrayList<Book> BookList = new ArrayList<>();
-//		Scanner sc = new Scanner(new File("src/library/books.csv"));
-//		while(sc.hasNext()){	
-//			Book book = new Book();	
-//			String[] split = sc.nextLine().split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
-//				book.setBook_id(split[0]);
-//				book.setGoodreads_book_id(split[1]);
-//				book.setBest_book_id(split[2]);
-//				book.setWork_id(split[3]);
-//				book.setBooks_count(split[4]);
-//				book.setIsbn(split[5]);
-//				book.setIsbn13(split[6]);
-//				book.setAuthors(split[7]);
-//				book.setOriginal_publication_year(split[8]);
-//				book.setOriginal_title(split[9]);
-//				book.setTitle(split[10]);
-//				book.setLanguage_code(split[11]);
-//				book.setAverage_rating(split[12]);
-//				book.setRatings_count(split[13]);
-//				book.setWork_ratings_count(split[14]);
-//				book.setWork_text_reviews_count(split[15]);
-//				book.setRatings_1(split[16]);
-//				book.setRatings_2(split[17]);
-//				book.setRatings_3(split[18]);
-//				book.setRatings_4(split[19]);
-//				book.setRatings_5(split[20]);
-//				book.setImage_url(split[21]);
-//				book.setSmall_image_url(split[22]);
-//			BookList.add(book);
-//		}
-//		sc.close();
-//
-//		return BookList;
-//	}
-	
 	public static List<Book> bookList() throws FileNotFoundException {
-		LinkedList<Book> BookList = new LinkedList<>();
+		ArrayList<Book> BookList = new ArrayList<>();
 		Scanner sc = new Scanner(new File("src/library/books.csv"));
 		while(sc.hasNext()){	
 			Book book = new Book();	
@@ -425,6 +389,42 @@ public class Book {
 		return BookList;
 	}
 	
+//	public static List<Book> bookList() throws FileNotFoundException {
+//		LinkedList<Book> BookList = new LinkedList<>();
+//		Scanner sc = new Scanner(new File("src/library/books.csv"));
+//		while(sc.hasNext()){	
+//			Book book = new Book();	
+//			String[] split = sc.nextLine().split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
+//				book.setBook_id(split[0]);
+//				book.setGoodreads_book_id(split[1]);
+//				book.setBest_book_id(split[2]);
+//				book.setWork_id(split[3]);
+//				book.setBooks_count(split[4]);
+//				book.setIsbn(split[5]);
+//				book.setIsbn13(split[6]);
+//				book.setAuthors(split[7]);
+//				book.setOriginal_publication_year(split[8]);
+//				book.setOriginal_title(split[9]);
+//				book.setTitle(split[10]);
+//				book.setLanguage_code(split[11]);
+//				book.setAverage_rating(split[12]);
+//				book.setRatings_count(split[13]);
+//				book.setWork_ratings_count(split[14]);
+//				book.setWork_text_reviews_count(split[15]);
+//				book.setRatings_1(split[16]);
+//				book.setRatings_2(split[17]);
+//				book.setRatings_3(split[18]);
+//				book.setRatings_4(split[19]);
+//				book.setRatings_5(split[20]);
+//				book.setImage_url(split[21]);
+//				book.setSmall_image_url(split[22]);
+//			BookList.add(book);
+//		}
+//		sc.close();
+//
+//		return BookList;
+//	}
+	
 
 	public static ArrayList<Book> showTopTen() throws FileNotFoundException {
 		ArrayList<Book> topTenList = new ArrayList<Book>();
@@ -449,6 +449,12 @@ public class Book {
 		return book;	
 	}
 	
+//	int binarySearch() {
+//		
+//		
+//		return -1;
+//	}
+	
 	public static Comparator<Book> AuthorComparatorAsc = new Comparator<Book>() {
 		
 		public int compare(Book b1, Book b2) {
@@ -459,6 +465,7 @@ public class Book {
 		
 	};
 	
+	//I believe this is a binary search?
 	public static Comparator<Book> AuthorComparatorDesc = new Comparator<Book>() {
 		
 		public int compare(Book b1, Book b2) {
@@ -468,7 +475,7 @@ public class Book {
 		}
 		
 	};
-	
+
 	public static ArrayList<Book> authorDescending() throws FileNotFoundException{
 		ArrayList<Book> descendingList = new ArrayList<Book>();
 		ArrayList<Book> tempList = showTopTen();
@@ -491,7 +498,14 @@ public class Book {
 	public static void main(String[] args) throws FileNotFoundException {
 		// TODO Auto-generated method stub
 		//showTopTen();
-		authorDescending();
+		ArrayList<Book> book = authorDescending();
+		int key = 2;
+		for(Book books: book) {
+			if(books.getAuthors().equals("Lauren Weisberger")) {
+				
+			}
+		}
+
 	}
 
 
