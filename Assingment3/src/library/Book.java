@@ -353,11 +353,18 @@ public class Book{
 
 
 
+	public Book(String string, Object object) {
+		// TODO Auto-generated constructor stub
+	}
+
+
+
 	public static List<Book> bookList() throws FileNotFoundException {
 		ArrayList<Book> BookList = new ArrayList<>();
 		Scanner sc = new Scanner(new File("src/library/books.csv"));
 		while(sc.hasNext()){	
 			Book book = new Book();	
+													//found this regex online
 			String[] split = sc.nextLine().split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
 				book.setBook_id(split[0]);
 				book.setGoodreads_book_id(split[1]);
@@ -428,32 +435,26 @@ public class Book{
 
 	public static ArrayList<Book> showTopTen() throws FileNotFoundException {
 		ArrayList<Book> topTenList = new ArrayList<Book>();
-		List<Book> tempList = bookList();
 		for(int i =1; i < 11; i++) {
-			topTenList.add(tempList.get(i));
+			topTenList.add(bookList().get(i));
 		}
 		return topTenList;
 	}
 	
+	
 	public static Book bookSearch(String book_id, String isbn) throws FileNotFoundException {
-		Book book = new Book();
 		List<Book> tempList = bookList();
-		for(Book books: tempList) {
-			if(book_id.equals(books.getBook_id())) {
-				book = books;
-			}else if (isbn.equals(books.getIsbn())) {
-				book = books;
+		for(Book sampleBook: tempList) {
+			if(book_id.equals(sampleBook.getBook_id())) {
+				return sampleBook;
+			}else if (isbn.equals(sampleBook.getIsbn())) {
+				return sampleBook;
 			}
 		}
 		
-		return book;	
+		return null;	
 	}
-	
-//	int binarySearch() {
-//		
-//		
-//		return -1;
-//	}
+
 	
 	public static Comparator<Book> AuthorComparatorAsc = new Comparator<Book>() {
 		
@@ -479,32 +480,34 @@ public class Book{
 	public static ArrayList<Book> authorDescending() throws FileNotFoundException{
 		ArrayList<Book> descendingList = new ArrayList<Book>();
 		ArrayList<Book> tempList = showTopTen();
-			//Collections.sort();
 			 Collections.sort(tempList, Book.AuthorComparatorDesc);
 			 descendingList = tempList;
 		return descendingList;
 	}
 	
-	public static ArrayList<Book> authorAscending() throws FileNotFoundException{
-		ArrayList<Book> ascendingList = new ArrayList<Book>();
-		ArrayList<Book> tempList = showTopTen();
-			//Collections.sort();
-			 Collections.sort(tempList, Book.AuthorComparatorAsc);
-			 ascendingList = tempList;
-
-		return ascendingList;
+	//think about sorting whole list then pick top ten 
+	public static ArrayList<Book> authorAscending() throws FileNotFoundException{	
+			 Collections.sort(bookList(), Book.AuthorComparatorAsc);
+			 ArrayList<Book> tempList = showTopTen();
+		return tempList;
 	}
+	
+	
 	
 	public static void main(String[] args) throws FileNotFoundException {
 		// TODO Auto-generated method stub
 		//showTopTen();
-		ArrayList<Book> book = authorDescending();
-		int key = 2;
-		for(Book books: book) {
-			if(books.getAuthors().equals("Lauren Weisberger")) {
-				
+		authorAscending();
+		
+		
+		Comparator<Book> b = new Comparator<Book>() {
+			public int compare(Book b1, Book b2) {
+				return b1.getBook_id().compareTo(b2.getBook_id());
 			}
-		}
+		};
+		
+		int index = Collections.binarySearch(book, new Book("83", null), b);
+		System.out.println(index);
 
 	}
 
