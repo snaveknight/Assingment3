@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Book{
-	String book_id;
+	Integer book_id;
 	String goodreads_book_id;
 	String best_book_id;
 	String work_id;
@@ -34,7 +34,7 @@ public class Book{
 	String ratings_5;
 	String image_url;
 	String small_image_url;
-	public Book(String book_id, String goodreads_book_id, String best_book_id, String work_id, String books_count,
+	public Book(int book_id, String goodreads_book_id, String best_book_id, String work_id, String books_count,
 			String isbn, String isbn13, String authors, String original_publication_year, String original_title,
 			String title, String language_code, String average_rating, String ratings_count, String work_ratings_count,
 			String work_text_reviews_count, String ratings_1, String ratings_2, String ratings_3, String ratings_4,
@@ -67,13 +67,13 @@ public class Book{
 
 
 	
-	public String getBook_id() {
+	public Integer getBook_id() {
 		return book_id;
 	}
 
 
 
-	public void setBook_id(String book_id) {
+	public void setBook_id(Integer book_id) {
 		this.book_id = book_id;
 	}
 
@@ -353,7 +353,7 @@ public class Book{
 
 
 
-	public Book(String string, Object object) {
+	public Book(int i, Object object) {
 		// TODO Auto-generated constructor stub
 	}
 
@@ -361,35 +361,40 @@ public class Book{
 
 	public static List<Book> bookList() throws FileNotFoundException {
 		ArrayList<Book> BookList = new ArrayList<>();
-		Scanner sc = new Scanner(new File("src/library/books.csv"));
+		Scanner sc = new Scanner(new File("Assingment3/src/library/books.csv"));
+		int counter = 0;
 		while(sc.hasNext()){	
 			Book book = new Book();	
-													//found this regex online
-			String[] split = sc.nextLine().split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
-				book.setBook_id(split[0]);
-				book.setGoodreads_book_id(split[1]);
-				book.setBest_book_id(split[2]);
-				book.setWork_id(split[3]);
-				book.setBooks_count(split[4]);
-				book.setIsbn(split[5]);
-				book.setIsbn13(split[6]);
-				book.setAuthors(split[7]);
-				book.setOriginal_publication_year(split[8]);
-				book.setOriginal_title(split[9]);
-				book.setTitle(split[10]);
-				book.setLanguage_code(split[11]);
-				book.setAverage_rating(split[12]);
-				book.setRatings_count(split[13]);
-				book.setWork_ratings_count(split[14]);
-				book.setWork_text_reviews_count(split[15]);
-				book.setRatings_1(split[16]);
-				book.setRatings_2(split[17]);
-				book.setRatings_3(split[18]);
-				book.setRatings_4(split[19]);
-				book.setRatings_5(split[20]);
-				book.setImage_url(split[21]);
-				book.setSmall_image_url(split[22]);
-			BookList.add(book);
+						if(counter > 1) {
+							//found this regex online
+							String[] split = sc.nextLine().split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
+							book.setBook_id(Integer.parseInt(split[0]));
+							book.setGoodreads_book_id(split[1]);
+							book.setBest_book_id(split[2]);
+							book.setWork_id(split[3]);
+							book.setBooks_count(split[4]);
+							book.setIsbn(split[5]);
+							book.setIsbn13(split[6]);
+							book.setAuthors(split[7]);
+							book.setOriginal_publication_year(split[8]);
+							book.setOriginal_title(split[9]);
+							book.setTitle(split[10]);
+							book.setLanguage_code(split[11]);
+							book.setAverage_rating(split[12]);
+							book.setRatings_count(split[13]);
+							book.setWork_ratings_count(split[14]);
+							book.setWork_text_reviews_count(split[15]);
+							book.setRatings_1(split[16]);
+							book.setRatings_2(split[17]);
+							book.setRatings_3(split[18]);
+							book.setRatings_4(split[19]);
+							book.setRatings_5(split[20]);
+							book.setImage_url(split[21]);
+							book.setSmall_image_url(split[22]);
+						BookList.add(book);
+						counter++;
+						}							
+			
 		}
 		sc.close();
 
@@ -459,8 +464,8 @@ public class Book{
 	public static Comparator<Book> AuthorComparatorAsc = new Comparator<Book>() {
 		
 		public int compare(Book b1, Book b2) {
-			String BookAuthorOne = b1.getAuthors().toUpperCase();
-			String BookAuthorTwo = b2.getAuthors().toUpperCase();
+			Integer BookAuthorOne = b1.getBook_id();
+			Integer BookAuthorTwo = b2.getBook_id();
 			return BookAuthorOne.compareTo(BookAuthorTwo);
 		}
 		
@@ -470,19 +475,19 @@ public class Book{
 	public static Comparator<Book> AuthorComparatorDesc = new Comparator<Book>() {
 		
 		public int compare(Book b1, Book b2) {
-			String BookAuthorOne = b1.getAuthors().toUpperCase();
-			String BookAuthorTwo = b2.getAuthors().toUpperCase();
+			Integer BookAuthorOne = b1.getBook_id();
+			Integer BookAuthorTwo = b2.getBook_id();
 			return BookAuthorTwo.compareTo(BookAuthorOne);
 		}
 		
 	};
 
+	
 	public static ArrayList<Book> authorDescending() throws FileNotFoundException{
-		ArrayList<Book> descendingList = new ArrayList<Book>();
-		ArrayList<Book> tempList = showTopTen();
-			 Collections.sort(tempList, Book.AuthorComparatorDesc);
-			 descendingList = tempList;
-		return descendingList;
+		 Collections.sort(bookList(), Book.AuthorComparatorDesc);
+		 ArrayList<Book> tempList = showTopTen();
+		 System.out.println(tempList);
+		return tempList;
 	}
 	
 	//think about sorting whole list then pick top ten 
@@ -492,22 +497,31 @@ public class Book{
 		return tempList;
 	}
 	
-	
+//	  public int runBinarySearchIteratively(  
+//			  ArrayList<Book> sortedArray, int key, int low, int high) {
+//			  	int index = Integer.MAX_VALUE;         
+//			  	while (low <= high) {         
+//				  int mid = low  + ((high - low) / 2);     
+//				  if (sortedArray[mid] < key) {					  
+//					  low = mid + 1;     
+//				  }
+//				  else if (sortedArray[mid] > key) {				  
+//			              high = mid - 1;         
+//			 	   }
+//				  else if (sortedArray[mid] == key) {
+//			              index = mid;       
+//			              break;        
+//				  }    
+//			 	}    
+//			 			 return index; }
 	
 	public static void main(String[] args) throws FileNotFoundException {
-		// TODO Auto-generated method stub
+
 		//showTopTen();
-		authorAscending();
-		
-		
-		Comparator<Book> b = new Comparator<Book>() {
-			public int compare(Book b1, Book b2) {
-				return b1.getBook_id().compareTo(b2.getBook_id());
-			}
-		};
-		
-		int index = Collections.binarySearch(book, new Book("83", null), b);
-		System.out.println(index);
+		ArrayList<Book> authorAsc = new ArrayList<Book>();
+				authorAsc = authorAscending();
+		System.out.println(authorAsc + "  line 523");
+
 
 	}
 
