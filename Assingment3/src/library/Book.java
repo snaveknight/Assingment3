@@ -365,7 +365,8 @@ public class Book{
 		int counter = 0;
 		while(sc.hasNext()){	
 			Book book = new Book();	
-						if(counter > 1) {
+			System.out.println("line 368");
+						if(counter > 0) {
 							//found this regex online
 							String[] split = sc.nextLine().split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
 							book.setBook_id(Integer.parseInt(split[0]));
@@ -392,8 +393,8 @@ public class Book{
 							book.setImage_url(split[21]);
 							book.setSmall_image_url(split[22]);
 						BookList.add(book);
-						counter++;
 						}							
+						counter++;
 			
 		}
 		sc.close();
