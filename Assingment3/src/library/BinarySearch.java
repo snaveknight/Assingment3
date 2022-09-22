@@ -31,8 +31,7 @@ public class BinarySearch {
 	        return -1;
 	    }
 	  
-	  public int runBinarySearchIteratively(  
-			  int[] sortedArray, int key, int low, int high) {
+	  public int runBinarySearchIteratively( int[] sortedArray, int key, int low, int high) {
 			  	int index = Integer.MAX_VALUE;         
 			  	while (low <= high) {         
 				  int mid = low  + ((high - low) / 2);     
