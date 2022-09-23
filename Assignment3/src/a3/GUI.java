@@ -30,6 +30,7 @@ public class GUI extends JPanel implements ActionListener {
 	private JComboBox<String> comboBoxOrder;
 	private final ButtonGroup buttonGroupSearch = new ButtonGroup();
 	private final ButtonGroup buttonGroupOrder = new ButtonGroup();
+	private final ButtonGroup buttonGroupListType = new ButtonGroup();
 	private String currentAmount = "Top Ten";
 	private String currentDirection = "Ascending";
 	private String currentOrder = "Default";
@@ -67,7 +68,6 @@ public class GUI extends JPanel implements ActionListener {
 		verticalBox.add(horizontalBox);
 		
 		JLabel lblSearch = new JLabel("Search: ");
-		lblSearch.setDisplayedMnemonic('S');
 		horizontalBox.add(lblSearch);
 		
 		searchField = new JTextField();
@@ -85,8 +85,9 @@ public class GUI extends JPanel implements ActionListener {
 		verticalBox.add(horizontalBox_1);
 		
 		Box verticalBox_2 = Box.createVerticalBox();
-		verticalBox_2.setAlignmentX(Component.CENTER_ALIGNMENT);
-		verticalBox_2.setAlignmentY(Component.BOTTOM_ALIGNMENT);
+		//verticalBox_2.setAlignmentX(Component.CENTER_ALIGNMENT);
+		//verticalBox_2.setAlignmentY(Component.BOTTOM_ALIGNMENT);
+		verticalBox_2.setAlignmentY(Component.TOP_ALIGNMENT);
 		horizontalBox_1.add(verticalBox_2);
 		
 		JRadioButton rdbtnBookId = new JRadioButton("Book ID");
@@ -98,17 +99,32 @@ public class GUI extends JPanel implements ActionListener {
 		buttonGroupSearch.add(rdbtnISBN);
 		verticalBox_2.add(rdbtnISBN);
 		
-		Component horizontalGlue = Box.createHorizontalGlue();
-		horizontalBox_1.add(horizontalGlue);
+		// Component horizontalGlue = Box.createHorizontalGlue();
+		// horizontalBox_1.add(horizontalGlue);
 		
 		Box verticalBox_3 = Box.createVerticalBox();
-		verticalBox_3.setAlignmentX(Component.RIGHT_ALIGNMENT);
-		verticalBox_3.setAlignmentY(Component.BOTTOM_ALIGNMENT);
+		//verticalBox_3.setAlignmentX(Component.RIGHT_ALIGNMENT);
+		//verticalBox_3.setAlignmentY(Component.BOTTOM_ALIGNMENT);
+		verticalBox_3.setAlignmentY(Component.TOP_ALIGNMENT);
 		horizontalBox_1.add(verticalBox_3);
 		
 		JButton btnSearch = new JButton("Find");
+		btnSearch.setAlignmentX(Component.RIGHT_ALIGNMENT);
 		btnSearch.setActionCommand("search");
 		btnSearch.addActionListener(this);
+
+		Box verticalBox_7 = Box.createVerticalBox();
+		verticalBox_7.setAlignmentX(Component.RIGHT_ALIGNMENT);
+		verticalBox_3.add(verticalBox_7);
+		
+		JRadioButton rdbtnLL = new JRadioButton("Linked List");
+		rdbtnLL.setSelected(true);
+		buttonGroupListType.add(rdbtnLL);
+		verticalBox_7.add(rdbtnLL);
+		
+		JRadioButton rdbtnAL = new JRadioButton("Array List");
+		buttonGroupListType.add(rdbtnAL);
+		verticalBox_7.add(rdbtnAL);
 		verticalBox_3.add(btnSearch);
 		
 		JPanel panelView = new JPanel();
@@ -395,81 +411,71 @@ public class GUI extends JPanel implements ActionListener {
 			// Gather the search string.
 			String searchString = searchField.getText();
 
-			// Gather which radio button is selected.
-			String selectedBtn = null;
+			// Gather which radio button are selected.
+			String searchTypeBtn = null;
+			String listTypeBtn = null;
 			Enumeration<AbstractButton> allSearchRdbtn = buttonGroupSearch.getElements();
 			while(allSearchRdbtn.hasMoreElements()) {
 				JRadioButton temp = (JRadioButton)allSearchRdbtn.nextElement();
 				if (temp.isSelected()) {
-					selectedBtn = temp.getText();
+					searchTypeBtn = temp.getText();
+				}
+			}
+			Enumeration<AbstractButton> allListRdbtn = buttonGroupListType.getElements();
+			while(allListRdbtn.hasMoreElements()) {
+				JRadioButton temp = (JRadioButton)allListRdbtn.nextElement();
+				if (temp.isSelected()) {
+					listTypeBtn = temp.getText();
 				}
 			}
 			
 			Book result = null;
-			if (selectedBtn.equals("Book ID")) {
-				result = bl.getSearchID(searchString);
-				if (result != null) {
-					Component frame = null;
-					String displayResult = 
-								"Book ID: " + result.getBook_id() + 
-								"\nGoodreads Book ID: " + result.getGoodreads_book_id() + 
-								"\nBest Book ID:" + result.getBest_book_id() +
-								"\nWork ID: " + result.getWork_id() +
-								"\nBooks Count: " + result.getBooks_count() +  
-								"\nISBN: " + result.getIsbn() +
-								"\nISBN 13: " + result.getIsbn13() +
-								"\nAuthors: " + result.getAuthors() +
-								"\nOrig. Pub. Year: " + result.getOriginal_publication_year() + 
-								"\nOrig. Title: " + result.getOriginal_title() +
-								"\nTitle: " + result.getTitle() +
-								"\nLanguage Code: " + result.getLanguage_code() +
-								"\nAverage Rating: " + result.getAverage_rating() +
-								"\nRatings Count: " + result.getRatings_count() +
-								"\nWork Ratings Cnt: " + result.getWork_ratings_count() +
-								"\nWork Txt Reviews Cnt: " + result.getWork_text_reviews_count() + 
-								"\nRatings 1: " + result.getRatings_1() +
-								"\nRatings 2: " + result.getRatings_2() +
-								"\nRatings 3: " + result.getRatings_3() +
-								"\nRatings 4: " + result.getRatings_4() +
-								"\nRatings 5: " + result.getRatings_5() + 
-								"\nImage URL: " + result.getImage_url() +
-								"\nSmall Image URL: " + result.getSmall_image_url() + "";
-					JOptionPane.showMessageDialog(frame, displayResult);
+			if (searchTypeBtn.equals("Book ID")) {
+				if (listTypeBtn.equals("Linked List")){
+					result = bl.getSearchIDLL(searchString);
+				}
+				if (listTypeBtn.equals("Array List")){
+					result = bl.getSearchIDAL(searchString);
 				}
 			}
-			if (selectedBtn.equals("ISBN")) {
-				System.out.println(searchString);
-				result = bl.getSearchISBN(searchString);
-				if(result != null) {
-					Component frame = null;
-					String displayResult = 
-								"Book ID: " + result.getBook_id() + 
-								"\nGoodreads Book ID: " + result.getGoodreads_book_id() + 
-								"\nBest Book ID:" + result.getBest_book_id() +
-								"\nWork ID: " + result.getWork_id() +
-								"\nBooks Count: " + result.getBooks_count() +  
-								"\nISBN: " + result.getIsbn() +
-								"\nISBN 13: " + result.getIsbn13() +
-								"\nAuthors: " + result.getAuthors() +
-								"\nOrig. Pub. Year: " + result.getOriginal_publication_year() + 
-								"\nOrig. Title: " + result.getOriginal_title() +
-								"\nTitle: " + result.getTitle() +
-								"\nLanguage Code: " + result.getLanguage_code() +
-								"\nAverage Rating: " + result.getAverage_rating() +
-								"\nRatings Count: " + result.getRatings_count() +
-								"\nWork Ratings Cnt: " + result.getWork_ratings_count() +
-								"\nWork Txt Reviews Cnt: " + result.getWork_text_reviews_count() + 
-								"\nRatings 1: " + result.getRatings_1() +
-								"\nRatings 2: " + result.getRatings_2() +
-								"\nRatings 3: " + result.getRatings_3() +
-								"\nRatings 4: " + result.getRatings_4() +
-								"\nRatings 5: " + result.getRatings_5() + 
-								"\nImage URL: " + result.getImage_url() +
-								"\nSmall Image URL: " + result.getSmall_image_url() + "";
-					JOptionPane.showMessageDialog(frame, displayResult);
+			if (searchTypeBtn.equals("ISBN")) {
+				if (listTypeBtn.equals("Linked List")){
+					result = bl.getSearchISBNLL(searchString);
 				}
+				if (listTypeBtn.equals("Array List")){
+					result = bl.getSearchISBNAL(searchString);
+				}
+			}
+			if (result != null) {
+				Component frame = null;
+				String displayResult = 
+							"Book ID: " + result.getBook_id() + 
+							"\nGoodreads Book ID: " + result.getGoodreads_book_id() + 
+							"\nBest Book ID:" + result.getBest_book_id() +
+							"\nWork ID: " + result.getWork_id() +
+							"\nBooks Count: " + result.getBooks_count() +  
+							"\nISBN: " + result.getIsbn() +
+							"\nISBN 13: " + result.getIsbn13() +
+							"\nAuthors: " + result.getAuthors() +
+							"\nOrig. Pub. Year: " + result.getOriginal_publication_year() + 
+							"\nOrig. Title: " + result.getOriginal_title() +
+							"\nTitle: " + result.getTitle() +
+							"\nLanguage Code: " + result.getLanguage_code() +
+							"\nAverage Rating: " + result.getAverage_rating() +
+							"\nRatings Count: " + result.getRatings_count() +
+							"\nWork Ratings Cnt: " + result.getWork_ratings_count() +
+							"\nWork Txt Reviews Cnt: " + result.getWork_text_reviews_count() + 
+							"\nRatings 1: " + result.getRatings_1() +
+							"\nRatings 2: " + result.getRatings_2() +
+							"\nRatings 3: " + result.getRatings_3() +
+							"\nRatings 4: " + result.getRatings_4() +
+							"\nRatings 5: " + result.getRatings_5() + 
+							"\nImage URL: " + result.getImage_url() +
+							"\nSmall Image URL: " + result.getSmall_image_url() + "";
+				JOptionPane.showMessageDialog(frame, displayResult);
 			}
 		}
+		
 		if ("order".equals(e.getActionCommand())) {
 			System.out.println("Order Pressed");
 			
@@ -493,7 +499,6 @@ public class GUI extends JPanel implements ActionListener {
 					System.out.println("Called.");
 				}
 			}
-			
 		}
 	
 		if ("topten".equals(e.getActionCommand())) {
@@ -502,6 +507,7 @@ public class GUI extends JPanel implements ActionListener {
 			bookListTable.setModel(newModel);
 			newModel.refresh();
 		}
+
 		if ("full".equals(e.getActionCommand())) { 
 			currentAmount = "Full List";
 			BookTableModel newModel = new BookTableModel();

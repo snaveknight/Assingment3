@@ -60,24 +60,34 @@ public class BookLibrary {
 		return topTen;
 	}
 	
-	public Book getSearchID(String searchString){
-		Book searchResults = null;
+	public Book getSearchIDLL(String searchString){
+		Book searchResult = null;
 		for (Book book : bookListLL) {
 			if (book.getBook_id().equals(searchString)) {
-				searchResults = book;
+				searchResult = book;
 			}
 		}
-		return searchResults;
+		return searchResult;
 	}
 	
-	public Book getSearchISBN(String searchString){
-		Book searchResults = null;
+	public Book getSearchISBNLL(String searchString){
+		Book searchResult = null;
 		for (Book book : bookListLL) {
 			if (book.getIsbn().equals(searchString)) {
-				searchResults = book;
+				searchResult = book;
 			}
 		}
-		return searchResults;
+		return searchResult;
+	}
+
+	public Book getSearchIDAL(String searchString){
+		Book searchResult = null;
+		return searchResult;	
+	}
+
+	public Book getSearchISBNAL(String searchString){
+		Book searchResult = null;
+		return searchResult;	
 	}
 	
 	public void createBook() throws IOException {
