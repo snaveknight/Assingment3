@@ -3,12 +3,19 @@ package library;
 import java.io.File;
 
 import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
+
+import com.opencsv.CSVReader;
+import com.opencsv.CSVWriter;
+import com.opencsv.exceptions.CsvValidationException;
 
 public class Book{
 	Integer book_id;
@@ -366,7 +373,8 @@ public class Book{
 		while(sc.hasNext()){	
 			Book book = new Book();	
 			System.out.println("line 368");
-						if(counter > 0) {
+			sc.nextLine();
+						if(counter > 1) {
 							//found this regex online
 							String[] split = sc.nextLine().split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
 							book.setBook_id(Integer.parseInt(split[0]));
@@ -441,7 +449,7 @@ public class Book{
 
 	public static ArrayList<Book> showTopTen() throws FileNotFoundException {
 		ArrayList<Book> topTenList = new ArrayList<Book>();
-		for(int i =1; i < 11; i++) {
+		for(int i =0; i < 10; i++) {
 			topTenList.add(bookList().get(i));
 		}
 		return topTenList;
@@ -498,6 +506,45 @@ public class Book{
 		return tempList;
 	}
 	
+	//this will delete it from the booklist, not from csv
+	public static void deleteBook(Integer book_id, List<Book> bookList) throws FileNotFoundException, CsvValidationException {
+		File file = new File("Assingment3/src/library/books.csv");
+		for(int i = 0;i<bookList.size();i++) {
+			if(bookList.get(i).getBook_id().equals(book_id)) {
+				bookList.remove(i);
+			}
+		}
+		try {
+			
+			//This should remove from csv
+			String[] nextLine = null;
+			
+			CSVReader reader = new CSVReader(new FileReader("Assingment3/src/library/books.csv"));
+	        // create FileWriter object with file as parameter
+	        FileWriter outputfile = new FileWriter(file);
+	  
+	        // create CSVWriter object filewriter object as parameter
+	        CSVWriter writer = new CSVWriter(outputfile);
+	    
+	        while((nextLine = reader.readNext()) !=null) {
+	        	String split[] = reader.readNext();
+	        	if(!split[0].equals(book_id.toString())) {
+	        		writer.writeNext(nextLine);
+	        	}
+	        	
+	        }
+	        
+	        writer.flush();
+	        writer.close();
+	        
+		}   catch (IOException e) {
+	        // TODO Auto-generated catch block
+	        e.printStackTrace();
+	    }
+
+	}
+	
+	
 	  public int runBinarySearchIteratively(ArrayList<Book> sortedArray, int key, int low, int high) {
 			  	int index = Integer.MAX_VALUE;  
 			  	
@@ -515,13 +562,12 @@ public class Book{
 				  }    
 			 	}    
 			 			 return index; }
+	  
+	  
 	
 	public static void main(String[] args) throws FileNotFoundException {
 
-		//showTopTen();
-		ArrayList<Book> authorAsc = new ArrayList<Book>();
-				authorAsc = authorAscending();
-		System.out.println(authorAsc + "  line 523");
+		//deleteBook(77, authorAscending());
 
 
 	}
