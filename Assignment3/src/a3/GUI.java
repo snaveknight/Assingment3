@@ -7,21 +7,24 @@ import java.awt.event.*;
 import java.io.IOException;
 
 import javax.swing.border.TitledBorder;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.border.EtchedBorder;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 
 import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.LinkedList;
 
 public class GUI extends JPanel implements ActionListener {
 	
 	private static final String CSV_FILE_PATH = "Assignment3\\data\\books.csv";
-	
-	private static final long serialVersionUID = 2603082395062664401L;
+
 	private JTextField searchField;
 	private JTable bookListTable;
 	private JComboBox<String> comboBoxOrder;
@@ -214,9 +217,8 @@ public class GUI extends JPanel implements ActionListener {
 		
 	}
 
-	@SuppressWarnings("serial")
 	class BookTableModel extends AbstractTableModel {
-		private String[] tableHeaders = {"Book ID", 
+		public String[] tableHeaders = {"Book ID", 
 										"Goodreads Book ID", 
 										"Best Book ID", 
 										"Work ID", 
@@ -239,118 +241,132 @@ public class GUI extends JPanel implements ActionListener {
 										"Ratings 5", 
 										"Image URL", 
 										"Small Image URL"};
-		
-		private String[][] tableData = currentView();
-		
-		private String[][] currentView() {
-			int columns = 23;
+
+		public String[][] tableData = null;
+
+		public BookTableModel() {
 			int rows = 0;
-			String[][] currentTableView = null;
-			List<Book> orderedList = null;
 			if (currentAmount.equals("Top Ten")) {
-				rows = bl.getTopTen().size();	
+				rows = 10;
+				System.out.println("TT: " + rows);
 			}
 			if (currentAmount.equals("Full List")) {
-				rows = bl.bookListLL.size();
+				rows = 10000;
+				System.out.println("FL: " + rows);
 			}
+			this.tableData = currentView(rows);
+		}
+
+		public String[][] currentView(int rowAmount) {
+			int columns = 23;
+			int rows = rowAmount;
+			String[][] currentTableView = null;
+
+			List<Book> orderedList = bl.bookListLL;
 			
 			currentTableView = new String[rows][columns];
-			for (Book book : bl.bookListLL) {
-				if (currentOrder.equals("Author")) {
-					if (currentDirection.equals("Ascending")) {
-						
-					}
-					else {
-						
-					}
+			if (currentOrder.equals("Author")) {
+				if (currentDirection.equals("Ascending")) {
+					Collections.sort(orderedList, new AuthorComparator());
 				}
-				else if (currentOrder.equals("Original Publication Year")) {
-					
-				}
-				else {
-					
+				else { // Descending
+					Collections.sort(orderedList, new AuthorComparator().reversed());
 				}
 			}
-			
+			else if (currentOrder.equals("Original Publication Year")) {
+				if (currentDirection.equals("Ascending")) {
+					Collections.sort(orderedList, new PublicationComparator());
+				}
+				else { // Descending
+					Collections.sort(orderedList, new PublicationComparator().reversed());
+				}
+			}
+			else { // Default - Book ID
+				if (currentDirection.equals("Ascending")) {
+					orderedList = bl.bookListLL;
+				}
+				else { // Descending
+					Collections.reverse(orderedList);
+				}
+			}
+
 			for(int i = 0; i < rows; i++) {
 				for(int j = 0; j < columns; j++) {
 					switch(j) {
 						case 0:
-							currentTableView[i][j] = bl.getBookListLL().get(i).book_id;
+							currentTableView[i][j] = orderedList.get(i).book_id;
 							break;
 						case 1:
-							currentTableView[i][j] = bl.getBookListLL().get(i).goodreads_book_id;
+							currentTableView[i][j] = orderedList.get(i).goodreads_book_id;
 							break;
 						case 2:
-							currentTableView[i][j] = bl.getBookListLL().get(i).best_book_id;
+							currentTableView[i][j] = orderedList.get(i).best_book_id;
 							break;
 						case 3:
-							currentTableView[i][j] = bl.getBookListLL().get(i).work_id;
+							currentTableView[i][j] = orderedList.get(i).work_id;
 							break;
 						case 4:
-							currentTableView[i][j] = bl.getBookListLL().get(i).books_count;
+							currentTableView[i][j] = orderedList.get(i).books_count;
 							break;
 						case 5:
-							currentTableView[i][j] = bl.getBookListLL().get(i).isbn;
+							currentTableView[i][j] = orderedList.get(i).isbn;
 							break;
 						case 6:
-							currentTableView[i][j] = bl.getBookListLL().get(i).isbn13;
+							currentTableView[i][j] = orderedList.get(i).isbn13;
 							break;
 						case 7:
-							currentTableView[i][j] = bl.getBookListLL().get(i).authors;
+							currentTableView[i][j] = orderedList.get(i).authors;
 							break;
 						case 8:
-							currentTableView[i][j] = bl.getBookListLL().get(i).original_publication_year;
+							currentTableView[i][j] = orderedList.get(i).original_publication_year;
 							break;
 						case 9:
-							currentTableView[i][j] = bl.getBookListLL().get(i).original_title;
+							currentTableView[i][j] = orderedList.get(i).original_title;
 							break;
 						case 10:
-							currentTableView[i][j] = bl.getBookListLL().get(i).title;
+							currentTableView[i][j] = orderedList.get(i).title;
 							break;
 						case 11:
-							currentTableView[i][j] = bl.getBookListLL().get(i).language_code;
+							currentTableView[i][j] = orderedList.get(i).language_code;
 							break;
 						case 12:
-							currentTableView[i][j] = bl.getBookListLL().get(i).average_rating;
+							currentTableView[i][j] = orderedList.get(i).average_rating;
 							break;
 						case 13:
-							currentTableView[i][j] = bl.getBookListLL().get(i).ratings_count;
+							currentTableView[i][j] = orderedList.get(i).ratings_count;
 							break;
 						case 14:
-							currentTableView[i][j] = bl.getBookListLL().get(i).work_ratings_count;
+							currentTableView[i][j] = orderedList.get(i).work_ratings_count;
 							break;
 						case 15:
-							currentTableView[i][j] = bl.getBookListLL().get(i).work_text_reviews_count;
+							currentTableView[i][j] = orderedList.get(i).work_text_reviews_count;
 							break;
 						case 16:
-							currentTableView[i][j] = bl.getBookListLL().get(i).ratings_1;
+							currentTableView[i][j] = orderedList.get(i).ratings_1;
 							break;
 						case 17:
-							currentTableView[i][j] = bl.getBookListLL().get(i).ratings_2;
+							currentTableView[i][j] = orderedList.get(i).ratings_2;
 							break;
 						case 18:
-							currentTableView[i][j] = bl.getBookListLL().get(i).ratings_3;
+							currentTableView[i][j] = orderedList.get(i).ratings_3;
 							break;
 						case 19:
-							currentTableView[i][j] = bl.getBookListLL().get(i).ratings_4;
+							currentTableView[i][j] = orderedList.get(i).ratings_4;
 							break;
 						case 20:
-							currentTableView[i][j] = bl.getBookListLL().get(i).ratings_5;
+							currentTableView[i][j] = orderedList.get(i).ratings_5;
 							break;
 						case 21:
-							currentTableView[i][j] = bl.getBookListLL().get(i).image_url;
+							currentTableView[i][j] = orderedList.get(i).image_url;
 							break;
 						case 22:
-							currentTableView[i][j] = bl.getBookListLL().get(i).small_image_url;
+							currentTableView[i][j] = orderedList.get(i).small_image_url;
 							break;
 					}
 				}
 			}
-
 			return currentTableView;
 		}
-
 
 		public int getRowCount() { return tableData.length; }
 
@@ -366,11 +382,11 @@ public class GUI extends JPanel implements ActionListener {
 			tableData[row][col] = value;
 			fireTableCellUpdated(row, col);
 		}
-		
-		public void updateView(String amount, String order, String direction) {
-			
+
+		public void refresh() {
+			tableData = null;
+			fireTableDataChanged();
 		}
-		
 	}
 
 	public void actionPerformed(ActionEvent e) {
@@ -468,14 +484,18 @@ public class GUI extends JPanel implements ActionListener {
 				JRadioButton temp = (JRadioButton)allOrderRdbtn.nextElement();
 				if (temp.isSelected()) {
 					selectedBtn = temp.getText();
+					currentDirection = selectedBtn;
+					currentOrder = orderString;
+					
+					BookTableModel newModel = new BookTableModel();
+					bookListTable.setModel(newModel);
+					System.out.println("Called.");
 				}
 			}
 			
-			
-			
 		}
 	}
-	
+
     private static void createAndShowGUI() {
         // Create and set up the window.
         JFrame frame = new JFrame("Library Books");

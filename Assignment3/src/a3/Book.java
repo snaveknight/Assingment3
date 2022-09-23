@@ -1,5 +1,7 @@
 package a3;
 
+import java.util.Comparator;
+
 import com.opencsv.bean.CsvBindByName;
 
 public class Book {
@@ -74,7 +76,6 @@ public class Book {
 	public String small_image_url;
 	
 	// Getters and Setters
-	
 	public String getBook_id() { return book_id; }
 
 	public void setBook_id(String book_id) { this.book_id = book_id; }
@@ -166,5 +167,18 @@ public class Book {
 	public String getSmall_image_url() { return small_image_url; }
 
 	public void setSmall_image_url(String small_image_url) { this.small_image_url = small_image_url; }
-	
+}
+
+class AuthorComparator implements Comparator<Book> {
+	@Override
+	public int compare(Book o1, Book o2) {
+		return o1.getAuthors().compareToIgnoreCase(o2.getAuthors());
+	}
+}
+
+class PublicationComparator implements Comparator<Book> {
+	@Override
+	public int compare(Book o1, Book o2) {
+		return o1.getOriginal_publication_year().compareTo(o2.getOriginal_publication_year());
+	}
 }
