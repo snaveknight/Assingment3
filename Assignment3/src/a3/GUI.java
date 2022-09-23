@@ -495,6 +495,19 @@ public class GUI extends JPanel implements ActionListener {
 			}
 			
 		}
+	
+		if ("topten".equals(e.getActionCommand())) {
+			currentAmount = "Top Ten";
+			BookTableModel newModel = new BookTableModel();
+			bookListTable.setModel(newModel);
+			newModel.refresh();
+		}
+		if ("full".equals(e.getActionCommand())) { 
+			currentAmount = "Full List";
+			BookTableModel newModel = new BookTableModel();
+			bookListTable.setModel(newModel);
+			newModel.refresh();
+		}
 	}
 
     private static void createAndShowGUI() {
