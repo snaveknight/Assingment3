@@ -285,7 +285,7 @@ public class GUI extends JPanel implements ActionListener {
 				if (currentDirection.equals("Ascending")) {
 					orderedList = bl.bookListLL;
 				}
-				else { // Descending
+				if (currentDirection.equals("Descending")) {
 					Collections.reverse(orderedList);
 				}
 			}
@@ -384,7 +384,6 @@ public class GUI extends JPanel implements ActionListener {
 		}
 
 		public void refresh() {
-			tableData = null;
 			fireTableDataChanged();
 		}
 	}
@@ -489,6 +488,8 @@ public class GUI extends JPanel implements ActionListener {
 					
 					BookTableModel newModel = new BookTableModel();
 					bookListTable.setModel(newModel);
+					newModel.refresh();
+
 					System.out.println("Called.");
 				}
 			}
