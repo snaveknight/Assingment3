@@ -19,7 +19,7 @@ import java.util.LinkedList;
 
 public class GUI extends JPanel implements ActionListener {
 	
-	private static final String CSV_FILE_PATH = "Assingment3\\data\\books.csv";
+	private static final String CSV_FILE_PATH = "Assignment3\\data\\books.csv";
 	
 	private static final long serialVersionUID = 2603082395062664401L;
 	private JTextField searchField;
