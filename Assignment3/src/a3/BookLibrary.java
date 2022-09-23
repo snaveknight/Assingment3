@@ -9,6 +9,7 @@ import java.nio.file.Paths;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 
@@ -60,6 +61,7 @@ public class BookLibrary {
 		return topTen;
 	}
 	
+	// Linear Search
 	public Book getSearchIDLL(String searchString){
 		Book searchResult = null;
 		for (Book book : bookListLL) {
@@ -70,6 +72,7 @@ public class BookLibrary {
 		return searchResult;
 	}
 	
+	// Linear Search
 	public Book getSearchISBNLL(String searchString){
 		Book searchResult = null;
 		for (Book book : bookListLL) {
@@ -80,14 +83,67 @@ public class BookLibrary {
 		return searchResult;
 	}
 
+	// Binary Search
 	public Book getSearchIDAL(String searchString){
 		Book searchResult = null;
-		return searchResult;	
+
+		int key = Integer.parseInt(searchString);
+		int left = 0;
+		int right = bookListAL.size() - 1;
+
+		System.out.println(key + "\n" + left + "\n" + right);
+		while (left <= right) {         
+			int mid = left  + ((right - left) / 2); 
+
+			// Is key present at mid?
+			if (Integer.parseInt(bookListAL.get(mid).book_id) == key){
+				searchResult = bookListAL.get(mid);
+				System.out.println(mid);
+			}
+			else if (Integer.parseInt(bookListAL.get(mid).book_id) < key){
+				left = mid + 1;
+				System.out.println(mid);
+			}
+			else {
+				right = mid -1;
+				System.out.println(mid);
+			}
+			System.out.println(mid);
+		}
+		
+		return searchResult;
 	}
 
+	// Binary Search
 	public Book getSearchISBNAL(String searchString){
 		Book searchResult = null;
-		return searchResult;	
+		List<Book> bookListALSorted = bookListAL;
+		Collections.sort(bookListALSorted, new ISBNComparator());
+		int key = Integer.parseInt(searchString);
+		int left = 0;
+		int right = bookListAL.size() - 1;
+
+		System.out.println(key + "\n" + left + "\n" + right);
+		while (left <= right) {         
+			int mid = left  + ((right - left) / 2); 
+
+			// Is key present at mid?
+			if (Integer.parseInt(bookListALSorted.get(mid).getIsbn()) == key){
+				searchResult = bookListALSorted.get(mid);
+				System.out.println(mid);
+			}
+			else if (Integer.parseInt(bookListALSorted.get(mid).getIsbn()) < key){
+				left = mid + 1;
+				System.out.println(mid);
+			}
+			else {
+				right = mid -1;
+				System.out.println(mid);
+			}
+			System.out.println(mid);
+		}
+		
+		return searchResult;
 	}
 	
 	public void createBook() throws IOException {

@@ -182,3 +182,10 @@ class PublicationComparator implements Comparator<Book> {
 		return o1.getOriginal_publication_year().compareTo(o2.getOriginal_publication_year());
 	}
 }
+
+class ISBNComparator implements Comparator<Book> {
+	@Override
+	public int compare(Book o1, Book o2) { 
+		return Integer.valueOf(o1.getIsbn()).compareTo(Integer.valueOf(o2.getIsbn()));
+	}
+}

@@ -430,20 +430,34 @@ public class GUI extends JPanel implements ActionListener {
 			}
 			
 			Book result = null;
+			long totalTime = 0;
 			if (searchTypeBtn.equals("Book ID")) {
 				if (listTypeBtn.equals("Linked List")){
+					long startTime = System.currentTimeMillis();
 					result = bl.getSearchIDLL(searchString);
+					long endTime = System.currentTimeMillis();
+					totalTime = endTime - startTime;
 				}
 				if (listTypeBtn.equals("Array List")){
+					System.out.println("search started");
+					long startTime = System.currentTimeMillis();
 					result = bl.getSearchIDAL(searchString);
+					long endTime = System.currentTimeMillis();
+					totalTime = endTime - startTime;
 				}
 			}
 			if (searchTypeBtn.equals("ISBN")) {
 				if (listTypeBtn.equals("Linked List")){
+					long startTime = System.currentTimeMillis();
 					result = bl.getSearchISBNLL(searchString);
+					long endTime = System.currentTimeMillis();
+					totalTime = endTime - startTime;
 				}
 				if (listTypeBtn.equals("Array List")){
+					long startTime = System.currentTimeMillis();
 					result = bl.getSearchISBNAL(searchString);
+					long endTime = System.currentTimeMillis();
+					totalTime = endTime - startTime;
 				}
 			}
 			if (result != null) {
@@ -471,7 +485,9 @@ public class GUI extends JPanel implements ActionListener {
 							"\nRatings 4: " + result.getRatings_4() +
 							"\nRatings 5: " + result.getRatings_5() + 
 							"\nImage URL: " + result.getImage_url() +
-							"\nSmall Image URL: " + result.getSmall_image_url() + "";
+							"\nSmall Image URL: " + result.getSmall_image_url() +
+							"\nSearch Type: " + listTypeBtn +
+							"\nSearch Time: " + totalTime + " milliseconds";
 				JOptionPane.showMessageDialog(frame, displayResult);
 			}
 		}
